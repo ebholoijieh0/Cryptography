@@ -1,0 +1,30 @@
+[package]
+name = "aes-cryptography"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+
+[dependencies]
+aes = "0.8" # Or latest compatible version
+block-modes = "0.8" # Or latest compatible version
+hex = "0.4"
+getch = "0.3" # For password input
+rand = "0.8" # For secure random number generation
+argon2 = "0.5" # For strong key derivation
+anyhow = "1.0" # For better error handling
+clap = { version = "4.0", features = ["derive"] } # For command-line arguments
+colored = "2.0" # For colored output
+aes-gcm = "0.10"
+#cipher = "0.4.4"
+generic-array = "0.14"
+
+
+#[dev-dependencies] # Dependencies only for development (tests, etc.)
+#criterion = "0.3"
+
+#[build-dependencies] # Dependencies for build scripts
+#cc = "1.0"
+
+[[bin]] # Define multiple binaries
+name = "aes-cryptography"
+path = "src/main.rs"

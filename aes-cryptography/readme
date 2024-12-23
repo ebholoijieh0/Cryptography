@@ -1,0 +1,101 @@
+# AES Encryption/Decryption Tool
+
+This project provides a Python-based tool for file encryption and decryption using various AES modes, 
+including **ECB**, **CBC**, **CTR**, **GCM**, and **CCM**. It also supports multiple 
+key sizes: **128**, **192**, **256**, and a non-standard **512** (truncated to 256 bits).
+
+---
+
+## Features
+
+1. **AES Modes**:
+   - **ECB** (Electronic Codebook)
+   - **CBC** (Cipher Block Chaining)
+   - **CTR** (Counter)
+   - **GCM** (Galois/Counter Mode)
+   - **CCM** (Counter with CBC-MAC)
+
+2. **Key Sizes**: **128, 192, 256**, and **512** bits (non-standard).  
+   - AES block size is always 128 bits (16 bytes).
+   - If you choose 512 bits, the script still only uses the first 256 bits (32 bytes) internally for AES.
+
+3. **Salt Handling**:  
+   - A salt file (default: `salt.bin`) is used for PBKDF2 key derivation.  
+   - If the file doesn't exist, a new random salt is created.
+
+4. **Optional Data Key**:  
+   - You can parse a separate data key file (base64-encoded) and XOR it with your derived key.  
+   - This is purely demonstrative, not a recommended cryptographic practice.
+
+5. **Automatic Output Filenames**:  
+   - If you omit `--output`, the script generates a filename like `encrypt_cbc_20241223_153045.json` or `decrypt_cbc_20241223_153100.dec`.
+
+6. **No Logging to error.log**:  
+   - We intentionally do not write errors to `error.log`, so it remains empty.
+
+---
+
+## Requirements
+
+- Python 3.7+  
+- `cryptography` library  
+- `colorama` library (for colored terminal output)
+
+Install with:
+
+```bash
+pip install -r requirements.txt
+
+
+
+#Install dependencies:
+#---------------------------------------------------------
+pip install -r requirements.txt
+
+
+#Encrypt a file (default = AES-128 CBC):
+#---------------------------------------------------------
+python src/main.py encrypt \
+    --password "mysupersecret" \
+    --input plain.txt
+    # Note: we don't provide --output, so it will generate one like:
+    # "encrypt_cbc_20241223_153045.json"
+
+
+#Decrypt (AES-128 CBC by default):
+#---------------------------------------------------------
+python src/main.py decrypt \
+    --password "mysupersecret" \
+    --input encrypt_cbc_20241223_153045.json
+    # Again no --output, so the tool will generate something like:
+    # "decrypt_cbc_20241223_153100.dec"
+
+
+#Choose a specific AES mode (e.g., GCM) and 256-bit key:
+#---------------------------------------------------------
+python src/main.py encrypt \
+    --password "mysupersecret" \
+    --input plain.txt \
+    --aes-mode gcm \
+    --key-size 256
+#This will derive a 256-bit key and use AES-GCM.
+
+#Decrypt (AES-256 gcm):
+#---------------------------------------------------------
+python src/main.py decrypt \ 
+    --password "mysupersecret" \
+    --input encrypt_gcm_20241223_114623.json \
+    --aes-mode gcm \
+    --key-size 256
+
+#Use additional data key (e.g., data_key.bin that has a base64-encoded key inside it):
+#---------------------------------------------------------
+python src/main.py encrypt \
+    --password "mysupersecret" \
+    --input plain.txt \
+    --data-key-file data_key.bin \
+    --key-size 256 \
+    --aes-mode ctr
+
+#Check the generated output. Note that the script never writes to error.log, so that file remains empty even if errors occur.
+#---------------------------------------------------------
